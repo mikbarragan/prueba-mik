@@ -1,0 +1,336 @@
+openapi: 3.0.3
+info:
+  title: API Informes
+  description: |
+    # Descripción
+
+    Una *descripción* de la **API de Informes**.
+
+    # Uso
+
+    ```bash
+    $ npm run api
+    ```
+
+  version: "1.0.0"
+  contact:
+    name: Charly Falco
+    email: cfalco@gmail.com
+    url: http://linked.in/cfalco
+  license:
+    name: MIT
+    url: https://es.wikipedia.org/wiki/Licencia_MIT
+  termsOfService: https://terminos-del-servicio.com
+
+tags:
+  - name: Informes
+    description: Peticiones relacionadas con los informes
+  - name: Usuarios
+    description: Peticiones relacionadas con los usuarios
+
+paths:
+  /usuarios:
+    get:
+      summary: Obtener la lista de usuarios
+      description: Obtener la lista de usuarios
+      tags:
+        - Usuarios
+      operationId: getUsuarios
+      parameters:
+        - in: query
+          name: search
+          description: Permite buscar un usuario por nombre
+          schema:
+            type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuarios"
+#                type: array
+#                items:
+#                  $ref: "#/components/schemas/Usuario"
+#                  type: object
+#                  properties:
+#                    id:
+#                      type: string
+#                      format: uuid
+#                    nombre:
+#                      type: string
+#                    tipo:
+#                      type: string
+#                      enum: 
+#                        - detective
+#                        - cliente
+#                        - admin
+#                      default: cliente
+
+        401:
+          $ref: "#/components/responses/Response401"
+        403:
+          $ref: "#/components/responses/Response403"
+
+    post:
+      summary: Crea un usuario
+      description: Crea un usuario
+      tags:
+        - Usuarios
+      operationId: createUsuario
+      requestBody:
+        description: Usuario a crear
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUsuario"
+      responses:
+        201:
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+        401:
+          $ref: "#/components/responses/Response401"
+        403:
+          $ref: "#/components/responses/Response403"
+
+
+  /usuarios/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Obtiene un usuario por su id
+      description: Obtiene un usuario por su id
+      tags:
+        - Usuarios
+      operationId: getUsuarioById
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Usuario"
+#                type: object
+#                properties:
+#                  id:
+#                    type: string
+#                    format: uuid
+#                  nombre:
+#                    type: string
+#                  tipo:
+#                    type: string
+#                    enum: 
+#                      - detective
+#                      - cliente
+#                      - admin
+#                    default: cliente
+        401:
+          $ref: "#/components/responses/Response401"
+        403:
+          $ref: "#/components/responses/Response403"
+        404:
+          $ref: "#/components/responses/Response404"
+
+  /informes:
+    get: 
+      summary: Obtener informes
+      description: Obtener informes
+      tags:
+        - Informes
+      operationId: getInformes
+      parameters:
+        - in: query
+          name: limit
+          description: El número máximo de informes a visualizar
+          schema:
+            type: number
+        - in: query
+          name: offset
+          description: A partír del informe desde el que se quiere paginar
+          schema:
+            type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Informes"
+        401:
+          $ref: "#/components/responses/Response401"
+        403:
+          $ref: "#/components/responses/Response403"   
+    post:
+      summary: Crea un informe
+      description: Crea un informe
+      tags:
+        - Informes
+      operationId: createInforme
+      requestBody:
+        description: Informe a crear
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostInforme"
+      responses:
+        201:
+          description: Informe creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Informe"
+        400:
+          $ref: "#/components/responses/Response400"
+
+        401:
+          $ref: "#/components/responses/Response401"
+        403:
+          $ref: "#/components/responses/Response403"
+
+  /informes/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: Id del informe
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Obtiene un informe por su id
+      description: Obtiene un informe por su id
+      tags:
+        - Informes
+      operationId: getInformeById
+      responses:
+        200:
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Informe"
+        401:
+          $ref: "#/components/responses/Response401"
+        403:
+          $ref: "#/components/responses/Response403"
+        404:
+          $ref: "#/components/responses/Response404"                
+    
+    delete:
+      summary: Elimina un informe
+      description: Elimina un informe
+      tags:
+        - Informes
+      operationId: deleteInforme
+
+      responses:
+        204:
+          description: No encontrado
+        400:
+          $ref: "#/components/responses/Response400"          
+          
+components:
+  schemas:
+    Usuario:
+      title: Usuario
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        tipo:
+          type: string
+          enum: 
+            - detective
+            - cliente
+            - admin
+          default: cliente
+
+    PostUsuario:
+      title: PostUsuario
+      type: object
+      properties:
+        nombre:
+          type: string
+        tipo:
+          type: string
+          enum: 
+            - detective
+            - cliente
+            - admin
+          default: cliente
+
+    Informe:
+      title: Informe
+      type: object
+      properties:
+        id:
+          type: string
+        titulo:
+          type: string
+        contenido:
+          type: string
+        detective_id:
+          type: string
+        cliente_id:
+          type: string
+        estado:
+          type: string
+          enum:
+            - abierto
+            - cerrado
+            - pendiente
+    PostInforme:
+      title: PostInforme
+      type: object
+      properties:
+        titulo:
+          type: string
+        estado:
+          type: string
+          enum: 
+            - abierto
+            - cerrado
+            - pendiente
+          default: abierto
+            
+
+    Usuarios:
+      title: Usuarios
+      type: array
+      items:
+        $ref: "#/components/schemas/Usuario"
+
+    Informes:
+      title: Informes
+      type: array
+      items:
+        $ref: "#/components/schemas/Informe"
+
+
+
+  responses:
+    Response400:
+      description: Petición incorrecta o mal formada
+    Response401:
+      description: No estás autenticado
+    Response403:
+      description: No tienes permisos para ver este recurso
+    Response404:
+      description: No existe el recurso con ese id
+
+
+ 
