@@ -149,11 +149,17 @@ paths:
         - Informes
       operationId: getInformes
       parameters:
+        -  $ref: "#/components/parameters/PorEstado"
+#        - in: query
+#          name: estado
+#          description: Permite buscar los informes por un estado 
+#          schema:
+#            type: string
         - in: query
           name: limit
           description: El número máximo de informes a visualizar
           schema:
-            type: number
+            type: integer
         - in: query
           name: offset
           description: A partír del informe desde el que se quiere paginar
@@ -275,37 +281,33 @@ components:
 
     Informe:
       title: Informe
-      type: object
-      properties:
-        id:
-          type: string
-        titulo:
-          type: string
-        contenido:
-          type: string
-        detective_id:
-          type: string
-        cliente_id:
-          type: string
-        estado:
-          type: string
-          enum:
-            - abierto
-            - cerrado
-            - pendiente
+      allOf: #también hay anyOf (cualquiera de los que vengan); oneOf (o es el id o es el PostInforme)
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+        - $ref: "#components/schemas/PostInforme"      
     PostInforme:
       title: PostInforme
       type: object
       properties:
         titulo:
           type: string
+        contenido:
+          type: string
+        detective_id:
+          type: string
+          format: uuid
+        cliente_id:
+          type: string
+          format: uuid
         estado:
           type: string
-          enum: 
+          enum:
             - abierto
             - cerrado
             - pendiente
-          default: abierto
             
 
     Usuarios:
@@ -320,8 +322,6 @@ components:
       items:
         $ref: "#/components/schemas/Informe"
 
-
-
   responses:
     Response400:
       description: Petición incorrecta o mal formada
@@ -331,6 +331,25 @@ components:
       description: No tienes permisos para ver este recurso
     Response404:
       description: No existe el recurso con ese id
+      
+  parameters:
+    PorEstado:
+      in: query
+      name: estado
+      description: Permite buscar los informes por un estado 
+      schema:
+        type: string
 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 
+ 
  

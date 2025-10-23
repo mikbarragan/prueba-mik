@@ -12,3 +12,8 @@ Contraseña: 81Elc4
 excalidraw.com
 
 https://editor.swagger.io/
+
+api hub --> (anterior swaggerconfig) --> Para centralizar las apis diseñadas
+
+https://jsonplaceholder.typicode.com/users
+
